@@ -1,0 +1,56 @@
+class MissingNumberGame
+  def initialize(total_rounds = 10, range = 1..50)
+    @total_rounds = total_rounds
+    @range = range.to_a
+    @missing_numbers = []
+
+    while @missing_numbers.length < total_rounds
+      missing_number = @range.sample
+      @range.delete(missing_number)
+      @missing_numbers << missing_number
+    end
+  end
+
+  def play
+    puts "Welcome to the Missing Number Game!"
+    puts "You will play #{@total_rounds} rounds with a range from #{@range.first} to #{@range.last}."
+    puts "Each correct guess earns you points, and you can use hints if you're stuck."
+
+    @score = 0
+    @hints = 3
+
+    (1..@total_rounds).each do |round|
+      missing_number = @missing_numbers[round - 1]
+      sequence = @range.dup
+      sequence.delete(missing_number)
+
+      puts "Round #{round}/#{@total_rounds}:"
+      puts "Here's a sequence of numbers with one missing: #{sequence.join(', ')}"
+      puts "Can you guess the missing number?"
+      print "Enter your guess: "
+      guess = gets.chomp.to_i
+
+
+      if guess == missing_number
+        puts "Congratulations! You guessed correctly. You win this round!"
+        @score += 10
+      else
+        puts "Sorry, that's incorrect. The missing number was #{missing_number}. You lose this round."
+      end
+
+      puts "Your current score: #{@score}/#{round}"
+      puts "------------------------"
+    end
+
+    puts "Game over! Your final score: #{@score}/#{@total_rounds}"
+  end
+
+  def display_high_score
+    puts "High Score: #{@score}/#{@total_rounds}"
+  end
+end
+
+# Example usage:
+game = MissingNumberGame.new(10, 1..50)
+game.play
+game.display_high_score
